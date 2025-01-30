@@ -10,6 +10,7 @@ func NewTimelineBuilder(start, end time.Time) *TimelineBuilder {
 	b := &TimelineBuilder{}
 	b.StartTime = start
 	b.EndTime = end
+	b.Layout = DefaultLayout
 	return b
 }
 
@@ -20,6 +21,11 @@ func (b *TimelineBuilder) AddEntries(entries ...Entry) *TimelineBuilder {
 
 func (b *TimelineBuilder) SetIndicator(indicator time.Time) *TimelineBuilder {
 	b.Indicator = indicator
+	return b
+}
+
+func (b *TimelineBuilder) SetLayout(layout Layout) *TimelineBuilder {
+	b.Layout = layout
 	return b
 }
 

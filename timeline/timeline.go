@@ -16,21 +16,14 @@ type Timeline struct {
 	Indicator time.Time
 	EndTime   time.Time
 	Entries   []Entry
+	Layout    Layout
 }
 
 func (t Timeline) Generate() io.Reader {
 	nEntries := len(t.Entries)
 
-	const TIMELINE_WIDTH = 900.0
-	const HEADLINE_WIDTH = 100.0
-	const ENTRY_HEIGHT = 70.0
-	const ONLINE_BAR_WIDTH = 20.0
-	const ONLINE_BAR_FILLING_FACTOR = ONLINE_BAR_WIDTH / ENTRY_HEIGHT
-	const PADDING = 10.0
-	const PADDING_TOP = 40.0
-
-	width := TIMELINE_WIDTH + HEADLINE_WIDTH + ONLINE_BAR_WIDTH + 2*PADDING
-	height := ENTRY_HEIGHT*float64(nEntries) + PADDING_TOP + PADDING
+	width := t.Layout.Width()
+	height := t.Layout.Height(nEntries)
 
 	dc := gg.NewContext(int(width), int(height))
 	dc.SetFontFace(fontFace)
@@ -39,9 +32,9 @@ func (t Timeline) Generate() io.Reader {
 
 	cellHeights := make([]float64, nEntries)
 	for i := range t.Entries {
-		cellHeights[i] = ENTRY_HEIGHT
+		cellHeights[i] = t.Layout.EntryHeight
 	}
-	grid := layout.NewGrid(PADDING, PADDING_TOP, []float64{HEADLINE_WIDTH, TIMELINE_WIDTH}, cellHeights)
+	grid := layout.NewGrid(t.Layout.Margin.Left, t.Layout.Margin.Top, []float64{t.Layout.HeadlineWidth, t.Layout.TimelineWidth}, cellHeights)
 
 	headerGrid, _ := grid.ColAsSubgrid(0)
 	for idx, f := range headerGrid.ForEachCellRenderFunc {
@@ -88,7 +81,7 @@ func (t Timeline) Generate() io.Reader {
 	}
 
 	builder := timeline.NewTimelineBuilder().
-		SetFillingFactor(ONLINE_BAR_FILLING_FACTOR)
+		SetFillingFactor(t.Layout.OnlineBarFillingFactor())
 
 	for _, entry := range t.Entries {
 		if entry.Color == nil {
