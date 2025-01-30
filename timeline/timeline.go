@@ -34,7 +34,7 @@ func (t Timeline) Generate() io.Reader {
 	for i := range t.Entries {
 		cellHeights[i] = t.Layout.EntryHeight
 	}
-	grid := layout.NewGrid(t.Layout.Margin.Left, t.Layout.Margin.Top, []float64{t.Layout.HeadlineWidth, t.Layout.TimelineWidth}, cellHeights)
+	grid := layout.NewGrid(t.Layout.Margin.Left, t.Layout.Margin.Top+t.Layout.LabelHeight, []float64{t.Layout.HeadlineWidth, t.Layout.TimelineWidth}, cellHeights)
 
 	headerGrid, _ := grid.ColAsSubgrid(0)
 	for idx, f := range headerGrid.ForEachCellRenderFunc {
