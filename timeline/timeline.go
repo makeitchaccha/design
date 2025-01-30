@@ -73,7 +73,7 @@ func (t Timeline) Generate() io.Reader {
 		if current.Before(t.StartTime) {
 			current = current.Add(tics.interval) // move to the next hour to avoid drawing a tic at the start
 		}
-		for ; current.Before(t.EndTime); current = current.Add(tics.interval) {
+		for ; !current.After(t.EndTime); current = current.Add(tics.interval) {
 			x := timelineBounds.Min.X + (timelineBounds.Dx() * current.Sub(t.StartTime).Seconds() / total)
 			// draw a tic and label on the top
 
