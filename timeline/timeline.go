@@ -17,6 +17,8 @@ type Timeline struct {
 	EndTime   time.Time
 	Entries   []Entry
 	Layout    Layout
+	MainTics  Tics
+	SubTics   Tics
 }
 
 func (t Timeline) Generate() io.Reader {
@@ -58,22 +60,22 @@ func (t Timeline) Generate() io.Reader {
 
 	total := t.EndTime.Sub(t.StartTime).Seconds()
 
-	main, sub := CalculateTics(t.EndTime.Sub(t.StartTime))
+	main, sub := t.MainTics, t.SubTics
 	for i, tics := range []Tics{main, sub} {
 		_, offset := t.StartTime.Zone()
 		dOffset := time.Duration(offset) * time.Second
-		current := t.StartTime.Add(dOffset).Truncate(tics.interval).Add(-dOffset)
+		current := t.StartTime.Add(dOffset).Truncate(tics.Interval).Add(-dOffset)
 		if current.Before(t.StartTime) {
-			current = current.Add(tics.interval) // move to the next hour to avoid drawing a tic at the start
+			current = current.Add(tics.Interval) // move to the next hour to avoid drawing a tic at the start
 		}
-		for ; !current.After(t.EndTime); current = current.Add(tics.interval) {
+		for ; !current.After(t.EndTime); current = current.Add(tics.Interval) {
 			x := timelineBounds.Min.X + (timelineBounds.Dx() * current.Sub(t.StartTime).Seconds() / total)
 			// draw a tic and label on the top
 
 			dc.SetColor(color.RGBA{66, 66, 66, 255})
-			dc.DrawStringAnchored(current.Format(tics.format), x, timelineBounds.Min.Y-5, 0.5, -float64(i))
+			dc.DrawStringAnchored(current.Format(tics.Format), x, timelineBounds.Min.Y-5, 0.5, -float64(i))
 
-			dc.SetColor(tics.color)
+			dc.SetColor(tics.Color)
 			dc.DrawLine(x, timelineBounds.Min.Y, x, timelineBounds.Max.Y)
 			dc.Stroke()
 		}

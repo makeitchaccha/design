@@ -11,6 +11,7 @@ func NewTimelineBuilder(start, end time.Time) *TimelineBuilder {
 	b.StartTime = start
 	b.EndTime = end
 	b.Layout = DefaultLayout
+	b.MainTics, b.SubTics = CalculateTics(end.Sub(start)) // default tics
 	return b
 }
 
@@ -26,6 +27,16 @@ func (b *TimelineBuilder) SetIndicator(indicator time.Time) *TimelineBuilder {
 
 func (b *TimelineBuilder) SetLayout(layout Layout) *TimelineBuilder {
 	b.Layout = layout
+	return b
+}
+
+func (b *TimelineBuilder) SetMainTics(tics Tics) *TimelineBuilder {
+	b.MainTics = tics
+	return b
+}
+
+func (b *TimelineBuilder) SetSubTics(tics Tics) *TimelineBuilder {
+	b.SubTics = tics
 	return b
 }
 

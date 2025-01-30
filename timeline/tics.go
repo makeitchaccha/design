@@ -6,9 +6,9 @@ import (
 )
 
 type Tics struct {
-	interval time.Duration
-	format   string
-	color    color.Color
+	Interval time.Duration
+	Format   string
+	Color    color.Color
 }
 
 func CalculateTics(d time.Duration) (Tics, Tics) {
@@ -16,14 +16,14 @@ func CalculateTics(d time.Duration) (Tics, Tics) {
 	upgrade := upgradeDuration(base)
 
 	return Tics{
-			interval: base,
-			format:   chooseFormat(base),
-			color:    color.RGBA{200, 200, 200, 255},
+			Interval: base,
+			Format:   chooseFormat(base),
+			Color:    color.RGBA{200, 200, 200, 255},
 		},
 		Tics{
-			interval: upgrade,
-			format:   chooseFormat(upgrade),
-			color:    color.RGBA{100, 100, 100, 255},
+			Interval: upgrade,
+			Format:   chooseFormat(upgrade),
+			Color:    color.RGBA{100, 100, 100, 255},
 		}
 }
 
