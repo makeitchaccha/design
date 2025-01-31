@@ -62,6 +62,11 @@ func (t Timeline) Generate() io.Reader {
 
 	main, sub := t.MainTics, t.SubTics
 	for i, tics := range []Tics{main, sub} {
+		if tics.Interval == 0 {
+			// skip if no tics are set
+			continue
+		}
+
 		_, offset := t.StartTime.Zone()
 		dOffset := time.Duration(offset) * time.Second
 		current := t.StartTime.Add(dOffset).Truncate(tics.Interval).Add(-dOffset)
