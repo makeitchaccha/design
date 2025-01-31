@@ -17,17 +17,17 @@ func CalculateTics(d time.Duration) (Tics, Tics) {
 
 	return Tics{
 			Interval: base,
-			Format:   chooseFormat(base),
+			Format:   ChooseFormat(base),
 			Color:    color.RGBA{200, 200, 200, 255},
 		},
 		Tics{
 			Interval: upgrade,
-			Format:   chooseFormat(upgrade),
+			Format:   ChooseFormat(upgrade),
 			Color:    color.RGBA{100, 100, 100, 255},
 		}
 }
 
-func chooseFormat(d time.Duration) string {
+func ChooseFormat(d time.Duration) string {
 	if d < 60*time.Second {
 		return "15:04:05"
 	}
