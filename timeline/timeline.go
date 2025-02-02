@@ -7,28 +7,57 @@ import (
 	"time"
 
 	"github.com/fogleman/gg"
+	"github.com/makeitchaccha/design"
 	"github.com/makeitchaccha/rendering/chart/timeline"
 	"github.com/makeitchaccha/rendering/layout"
 )
 
 type Timeline struct {
+	Title     design.TextBox
 	StartTime time.Time
 	Indicator time.Time
 	EndTime   time.Time
 	Entries   []Entry
+	Margin    design.EdgeInsets
+	Padding   design.EdgeInsets
 	Layout    Layout
 	MainTics  Tics
 	SubTics   Tics
 }
 
+func (t Timeline) Width() float64 {
+	return t.Layout.Width() + t.Margin.Horizontal() + t.Padding.Horizontal()
+}
+
+func (t Timeline) Height() float64 {
+	return t.GridTop() + t.Layout.Height(len(t.Entries)) + t.Margin.Bottom + t.Padding.Bottom
+}
+
+func (t Timeline) GridTop() float64 {
+	height := t.Margin.Top + t.Padding.Top
+	if t.Title.Valid() {
+		height += t.Title.Height()
+	}
+	if t.MainTics.Valid() {
+		height += t.MainTics.Label.Height()
+	}
+	if t.SubTics.Valid() {
+		height += t.SubTics.Label.Height()
+	}
+	return height
+}
+
+func (t Timeline) GridLeft() float64 {
+	return t.Margin.Left
+}
+
 func (t Timeline) Generate() io.Reader {
 	nEntries := len(t.Entries)
 
-	width := t.Layout.Width()
-	height := t.Layout.Height(nEntries)
+	width := t.Width()
+	height := t.Height()
 
 	dc := gg.NewContext(int(width), int(height))
-	dc.SetFontFace(fontFace)
 	dc.SetColor(color.White)
 	dc.Clear()
 
@@ -36,7 +65,7 @@ func (t Timeline) Generate() io.Reader {
 	for i := range t.Entries {
 		cellHeights[i] = t.Layout.EntryHeight
 	}
-	grid := layout.NewGrid(t.Layout.Margin.Left, t.Layout.Margin.Top+t.Layout.LabelHeight, []float64{t.Layout.HeadlineWidth, t.Layout.TimelineWidth}, cellHeights)
+	grid := layout.NewGrid(t.GridLeft(), t.GridTop(), []float64{t.Layout.HeadlineWidth, t.Layout.TimelineWidth}, cellHeights)
 
 	headerGrid, _ := grid.ColAsSubgrid(0)
 	for idx, f := range headerGrid.ForEachCellRenderFunc {
@@ -54,15 +83,24 @@ func (t Timeline) Generate() io.Reader {
 
 	timelineGrid, _ := grid.ColAsSubgrid(1)
 
-	// draw tics on an hour intervals
-
 	timelineBounds := timelineGrid.Bounds()
 
-	total := t.EndTime.Sub(t.StartTime).Seconds()
+	// draw title
+	if t.Title.Valid() {
+		dc.Push()
+		dc.SetColor(color.RGBA{66, 66, 66, 255})
+		dc.SetFontFace(t.Title.Font)
+		dc.DrawStringAnchored(t.Title.Content, timelineBounds.Cx(), timelineBounds.Min.Y-t.Padding.Top-t.MainTics.Label.Height()-t.SubTics.Label.Height(), 0.5, 0)
+		dc.Pop()
+	}
 
+	// draw tics on an hour intervals
+
+	total := t.EndTime.Sub(t.StartTime).Seconds()
 	main, sub := t.MainTics, t.SubTics
-	for i, tics := range []Tics{main, sub} {
-		if tics.Interval == 0 {
+	anchor := 0.0
+	for _, tics := range []Tics{main, sub} {
+		if !tics.shouldDraw() {
 			// skip if no tics are set
 			continue
 		}
@@ -77,14 +115,17 @@ func (t Timeline) Generate() io.Reader {
 			x := timelineBounds.Min.X + (timelineBounds.Dx() * current.Sub(t.StartTime).Seconds() / total)
 			// draw a tic and label on the top
 
-			dc.SetColor(color.RGBA{66, 66, 66, 255})
-			dc.DrawStringAnchored(current.Format(tics.Format), x, timelineBounds.Min.Y-5, 0.5, -float64(i))
+			if tics.Label.Valid() {
+				dc.SetFontFace(tics.Label.Font)
+				dc.SetColor(color.RGBA{66, 66, 66, 255})
+				dc.DrawStringAnchored(current.Format(tics.Label.Content), x, timelineBounds.Min.Y-t.Padding.Top-anchor, 0.5, 0)
+			}
 
 			dc.SetColor(tics.Color)
 			dc.DrawLine(x, timelineBounds.Min.Y, x, timelineBounds.Max.Y)
 			dc.Stroke()
 		}
-
+		anchor -= tics.Label.Height()
 	}
 
 	builder := timeline.NewTimelineBuilder().

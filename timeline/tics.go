@@ -3,12 +3,22 @@ package timeline
 import (
 	"image/color"
 	"time"
+
+	"github.com/makeitchaccha/design"
 )
 
 type Tics struct {
 	Interval time.Duration
-	Format   string
 	Color    color.Color
+	Label    design.TextBox
+}
+
+func (t Tics) Valid() bool {
+	return t.shouldDraw() && t.Label.Valid()
+}
+
+func (t Tics) shouldDraw() bool {
+	return t.Interval != 0 && t.Color != nil
 }
 
 func CalculateTics(d time.Duration) (Tics, Tics) {
@@ -17,12 +27,12 @@ func CalculateTics(d time.Duration) (Tics, Tics) {
 
 	return Tics{
 			Interval: base,
-			Format:   ChooseFormat(base),
+			Label:    design.TextBox{Content: ChooseFormat(base), Font: design.DefaultLabelFontFace},
 			Color:    color.RGBA{200, 200, 200, 255},
 		},
 		Tics{
 			Interval: upgrade,
-			Format:   ChooseFormat(upgrade),
+			Label:    design.TextBox{Content: ChooseFormat(upgrade), Font: design.DefaultLabelFontFace},
 			Color:    color.RGBA{100, 100, 100, 255},
 		}
 }
