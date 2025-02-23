@@ -27,12 +27,12 @@ func CalculateTics(d time.Duration) (Tics, Tics) {
 
 	return Tics{
 			Interval: base,
-			Label:    design.TextBox{Content: ChooseFormat(base), Font: design.DefaultLabelFontFace},
+			Label:    design.TextBox{Content: ChooseFormat(base), Font: design.DefaultLabelFontFace()},
 			Color:    color.RGBA{200, 200, 200, 255},
 		},
 		Tics{
 			Interval: upgrade,
-			Label:    design.TextBox{Content: ChooseFormat(upgrade), Font: design.DefaultLabelFontFace},
+			Label:    design.TextBox{Content: ChooseFormat(upgrade), Font: design.DefaultLabelFontFace()},
 			Color:    color.RGBA{100, 100, 100, 255},
 		}
 }

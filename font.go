@@ -1,48 +1,25 @@
 package design
 
 import (
-	"os"
-	"os/exec"
-
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
+	"golang.org/x/image/font/gofont/goregular"
 )
 
-var DefaultLabelFontFace font.Face
-var DefaultTitleFontFace font.Face
-
-func init() {
-	// TODO: support windows maybe?
-	filename, err := FindFontFile("NotoSans", "Regular")
+func DefaultLabelFontFace() font.Face {
+	font, err := truetype.Parse(goregular.TTF)
 	if err != nil {
-		panic("could not find font file")
+		panic("something went wrong?")
 	}
 
-	font, err := LoadTrueTypeFont(filename)
-
-	if err != nil {
-		panic("could not load font")
-	}
-
-	DefaultLabelFontFace = truetype.NewFace(font, &truetype.Options{Size: 15})
-	DefaultTitleFontFace = truetype.NewFace(font, &truetype.Options{Size: 20})
+	return truetype.NewFace(font, &truetype.Options{Size: 15})
 }
 
-func FindFontFile(family string, style string) (string, error) {
-	// todo: support windows
-	filename, err := exec.Command("fc-match", family+":style="+style, "-f", "%{file}").Output()
-	return string(filename), err
-}
-
-func LoadTrueTypeFont(filename string) (*truetype.Font, error) {
-
-	fontByte, err := os.ReadFile(filename)
+func DefaultTitleFontFace() font.Face {
+	font, err := truetype.Parse(goregular.TTF)
 	if err != nil {
-		return nil, err
+		panic("something went wrong?")
 	}
-	font, err := truetype.Parse(fontByte)
-	if err != nil {
-		return nil, err
-	}
-	return font, nil
+
+	return truetype.NewFace(font, &truetype.Options{Size: 20})
 }
