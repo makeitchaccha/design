@@ -125,7 +125,7 @@ func (t Timeline) Generate() io.Reader {
 			dc.DrawLine(x, timelineBounds.Min.Y, x, timelineBounds.Max.Y)
 			dc.Stroke()
 		}
-		anchor -= tics.Label.Height()
+		anchor += tics.Label.Height()
 	}
 
 	builder := timeline.NewTimelineBuilder().
