@@ -4,5 +4,9 @@ github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 h1:DACJavvAHhabrF0
 github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0/go.mod h1:E/TSTwGwJL78qG/PmXZO1EjYhfJinVAhrmmHX6Z8B9k=
 github.com/makeitchaccha/rendering v0.0.3 h1:S0YtnJtT70wX9JUzm0+eY749Fcj7vR4s0eYXqaTZQAQ=
 github.com/makeitchaccha/rendering v0.0.3/go.mod h1:P+2pnZEY66cUYxv3ufTS2wMhuHN8K4T9zFz61/b+hus=
+github.com/makeitchaccha/rendering v0.0.4 h1:WuZnmqbOvfIW649GCm4TCqkwcbdN2ihejOuqj7kuv7U=
+github.com/makeitchaccha/rendering v0.0.4/go.mod h1:P+2pnZEY66cUYxv3ufTS2wMhuHN8K4T9zFz61/b+hus=
 golang.org/x/image v0.23.0 h1:HseQ7c2OpPKTPVzNjG5fwJsOTCiiwS4QdsYi5XU6H68=
 golang.org/x/image v0.23.0/go.mod h1:wJJBTdLfCCf3tiHa1fNxpZmUI4mmoZvwMCPP0ddoNKY=
+golang.org/x/image v0.24.0 h1:AN7zRgVsbvmTfNyqIbbOraYL8mSwcKncEj8ofjgzcMQ=
+golang.org/x/image v0.24.0/go.mod h1:4b/ITuLfqYq1hqZcjofwctIhi7sZh2WaCjvsBNjjya8=
