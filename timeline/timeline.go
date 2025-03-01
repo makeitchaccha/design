@@ -68,6 +68,8 @@ func (t Timeline) Generate() io.Reader {
 	grid := layout.NewGrid(t.GridLeft(), t.GridTop(), []float64{t.Layout.HeadlineWidth, t.Layout.TimelineWidth}, cellHeights)
 
 	headerGrid, _ := grid.ColAsSubgrid(0)
+
+	if headerGrid.Bounds().Dx() > 0 {
 	for idx, f := range headerGrid.ForEachCellRenderFunc {
 		entry := t.Entries[idx.Row]
 		f(dc, func(dc *gg.Context, x, y, w, h float64) error {
@@ -79,6 +81,7 @@ func (t Timeline) Generate() io.Reader {
 			dc.Pop()
 			return nil
 		})
+		}
 	}
 
 	timelineGrid, _ := grid.ColAsSubgrid(1)
