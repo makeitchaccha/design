@@ -70,17 +70,17 @@ func (t Timeline) Generate() io.Reader {
 	headerGrid, _ := grid.ColAsSubgrid(0)
 
 	if headerGrid.Bounds().Dx() > 0 {
-	for idx, f := range headerGrid.ForEachCellRenderFunc {
-		entry := t.Entries[idx.Row]
-		f(dc, func(dc *gg.Context, x, y, w, h float64) error {
-			dc.Push()
-			dc.DrawCircle(x+w/2, y+h/2, float64(entry.Avatar.Bounds().Dx())/2)
-			dc.Clip()
-			dc.DrawImageAnchored(entry.Avatar, int(x+w/2), int(y+h/2), 0.5, 0.5)
-			dc.ResetClip()
-			dc.Pop()
-			return nil
-		})
+		for idx, f := range headerGrid.ForEachCellRenderFunc {
+			entry := t.Entries[idx.Row]
+			f(dc, func(dc *gg.Context, x, y, w, h float64) error {
+				dc.Push()
+				dc.DrawCircle(x+w/2, y+h/2, float64(entry.Avatar.Bounds().Dx())/2)
+				dc.Clip()
+				dc.DrawImageAnchored(entry.Avatar, int(x+w/2), int(y+h/2), 0.5, 0.5)
+				dc.ResetClip()
+				dc.Pop()
+				return nil
+			})
 		}
 	}
 
@@ -143,7 +143,7 @@ func (t Timeline) Generate() io.Reader {
 		for _, section := range entry.Sections {
 			s := section.Start.Sub(t.StartTime).Seconds() / total
 			e := section.End.Sub(t.StartTime).Seconds() / total
-			entryBuilder.AddSection(s, e)
+			entryBuilder.AddSection(s, e, timeline.WithAlpha(section.Alpha))
 		}
 
 		builder.AddEntry(entryBuilder.Build())
