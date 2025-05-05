@@ -18,7 +18,7 @@ func NewEntryBuilder(avatar image.Image, color color.Color) *EntryBuilder {
 }
 
 func (b *EntryBuilder) AddSection(start, end time.Time, opts ...SectionOpt) *EntryBuilder {
-	section := Section{Start: start, End: end}
+	section := Section{Start: start, End: end, Alpha: 1.0}
 	section = section.applied(opts...)
 	b.Sections = append(b.Sections, section)
 	return b
