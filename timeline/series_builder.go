@@ -21,3 +21,7 @@ func (b *SeriesBuilder) AddSection(start, end time.Time, opts ...SectionOpt) *Se
 	b.Sections = append(b.Sections, section)
 	return b
 }
+
+func (b *SeriesBuilder) Build() Series {
+	return b.Series
+}
