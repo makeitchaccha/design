@@ -11,6 +11,7 @@ type SeriesBuilder struct {
 
 func NewSeriesBuilder(fillingFactor float64, color color.Color) *SeriesBuilder {
 	b := &SeriesBuilder{}
+	b.FillingFactor = fillingFactor
 	b.Color = color
 	return b
 }
