@@ -2,14 +2,14 @@ package timeline
 
 import (
 	"image"
-	"image/color"
 	"time"
 )
 
+// Entry represents a timeline entry.
+// It contains an avatar and a timeline entry.
 type Entry struct {
-	Avatar   image.Image
-	Color    color.Color
-	Sections []Section
+	Avatar image.Image
+	Series []Series
 }
 
 // Section represents a time Section in a timeline entry.

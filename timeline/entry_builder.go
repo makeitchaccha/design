@@ -2,25 +2,20 @@ package timeline
 
 import (
 	"image"
-	"image/color"
-	"time"
 )
 
 type EntryBuilder struct {
 	Entry
 }
 
-func NewEntryBuilder(avatar image.Image, color color.Color) *EntryBuilder {
+func NewEntryBuilder(avatar image.Image) *EntryBuilder {
 	b := &EntryBuilder{}
 	b.Avatar = avatar
-	b.Color = color
 	return b
 }
 
-func (b *EntryBuilder) AddSection(start, end time.Time, opts ...SectionOpt) *EntryBuilder {
-	section := Section{Start: start, End: end, Alpha: 1.0}
-	section = section.applied(opts...)
-	b.Sections = append(b.Sections, section)
+func (b *EntryBuilder) AddSeries(series Series) *EntryBuilder {
+	b.Series = append(b.Series, series)
 	return b
 }
 

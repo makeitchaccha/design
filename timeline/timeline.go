@@ -131,19 +131,26 @@ func (t Timeline) Generate() io.Reader {
 		anchor += tics.Label.Height()
 	}
 
-	builder := timeline.NewTimelineBuilder().
-		SetFillingFactor(t.Layout.OnlineBarFillingFactor())
+	builder := timeline.NewTimelineBuilder()
 
 	for _, entry := range t.Entries {
-		if entry.Color == nil {
-			entry.Color = extractMainColor(entry.Avatar)
-		}
 
-		entryBuilder := timeline.NewEntryBuilder(entry.Color)
-		for _, section := range entry.Sections {
-			s := section.Start.Sub(t.StartTime).Seconds() / total
-			e := section.End.Sub(t.StartTime).Seconds() / total
-			entryBuilder.AddSection(s, e, timeline.WithAlpha(section.Alpha))
+		entryBuilder := timeline.NewEntryBuilder()
+		for _, series := range entry.Series {
+			if series.Color == nil {
+				series.Color = extractMainColor(entry.Avatar)
+			}
+
+			seriesBuilder := timeline.NewSeriesBuilder(series.FillingFactor, series.Color)
+
+			for _, section := range series.Sections {
+
+				s := section.Start.Sub(t.StartTime).Seconds() / total
+				e := section.End.Sub(t.StartTime).Seconds() / total
+				seriesBuilder.AddSection(s, e, timeline.WithAlpha(section.Alpha))
+			}
+
+			entryBuilder.AddSeries(seriesBuilder.Build())
 		}
 
 		builder.AddEntry(entryBuilder.Build())
