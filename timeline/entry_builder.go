@@ -11,6 +11,7 @@ type EntryBuilder struct {
 func NewEntryBuilder(avatar image.Image) *EntryBuilder {
 	b := &EntryBuilder{}
 	b.Avatar = avatar
+	b.Series = make([]Series, 0)
 	return b
 }
 

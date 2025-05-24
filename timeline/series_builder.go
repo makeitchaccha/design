@@ -13,6 +13,7 @@ func NewSeriesBuilder(fillingFactor float64, color color.Color) *SeriesBuilder {
 	b := &SeriesBuilder{}
 	b.FillingFactor = fillingFactor
 	b.Color = color
+	b.Sections = make([]Section, 0)
 	return b
 }
 

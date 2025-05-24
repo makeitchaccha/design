@@ -14,6 +14,7 @@ func NewTimelineBuilder(start, end time.Time) *TimelineBuilder {
 	b := &TimelineBuilder{}
 	b.StartTime = start
 	b.EndTime = end
+	b.Entries = make([]Entry, 0)
 	b.Layout = DefaultLayout()
 	b.MainTics, b.SubTics = CalculateTics(end.Sub(start)) // default tics
 	b.Margin = design.EdgeInsets{
